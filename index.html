@@ -16,18 +16,57 @@
         <button id="addTaskBtn">+Add Task</button>
         <input type="date" />
         <button id="priorityBtn">
-          <i class="fa-solid fa-chevron-down"></i>
+          <i class="fas fa-flag"></i>
         </button>
       </form>
     </div>
 
+    <!-- For Priority Modals -->
     <dialog id="priorityModal">
+      <button id="closeModalBtn" aria-label="close" class="close-btn">
+        <i class="fas fa-times"></i>
+      </button>
       <h3>Priority</h3>
-      <form>
-        <input type="radio" id="highP" name="priority" value="highP" />
-        <input type="radio" id="mediumP" name="priority" value="mediumP" />
-        <input type="radio" id="lowP" name="priority" value="lowP" />
-        <input type="radio" id="noP" name="priority" value="noP" />
+      <form id="priorityForm">
+        <div class="priority-options">
+          <label>
+            <input
+              type="radio"
+              name="priority"
+              value="high"
+              onclick="closeModal()"
+            />
+            <i class="fas fa-flag" style="color: #ff4d4d"></i>
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="priority"
+              value="medium"
+              onclick="closeModal()"
+            />
+            <i class="fas fa-flag" style="color: #ffcc00"></i>
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="priority"
+              value="low"
+              onclick="closeModal()"
+            />
+            <i class="fas fa-flag" style="color: #3399ff"></i>
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="priority"
+              value="none"
+              onclick="closeModal()"
+              checked
+            />
+            <i class="fas fa-flag" style="color: #cccccc"></i>
+          </label>
+        </div>
       </form>
     </dialog>
     <script src="/script.js"></script>
