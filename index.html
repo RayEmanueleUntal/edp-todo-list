@@ -5,8 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>To-Do List</title>
     <link rel="stylesheet" href="/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
   </head>
   <body>
+    <div class="container">
+      <form class="addTaskArea" style="background-color: green">
+        <button id="addTaskBtn">+Add Task</button>
+        <input type="date" />
+        <button id="priorityBtn">
+          <i class="fa-solid fa-chevron-down"></i>
+        </button>
+      </form>
+    </div>
+
+    <dialog id="priorityModal">
+      <h3>Priority</h3>
+      <form>
+        <input type="radio" id="highP" name="priority" value="highP" />
+        <input type="radio" id="mediumP" name="priority" value="mediumP" />
+        <input type="radio" id="lowP" name="priority" value="lowP" />
+        <input type="radio" id="noP" name="priority" value="noP" />
+      </form>
+    </dialog>
     <script src="/script.js"></script>
   </body>
 </html>
