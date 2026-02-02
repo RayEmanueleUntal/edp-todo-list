@@ -176,16 +176,18 @@ function createListContainer(cat, tasks) {
 
   tasks.forEach((task) => {
     taskList.innerHTML += `
-      <li class="taskItem ${task.completed ? "completed" : ""}">
-        <input type="checkbox" ${
-          task.completed ? "checked" : ""
-        } onclick="toggleTaskCompletion(${task.id})" />
-        <span>${task.text}</span>
-        <button onclick="deleteTask(${task.id})">
-          <i class="fas fa-trash"></i>
-        </button>
-      </li>
-    `;
+    <li class="taskItem ${task.completed ? "completed" : ""}">
+      <input type="checkbox" ${
+        task.completed ? "checked" : ""
+      } onclick="toggleTaskCompletion(${task.id})" />
+      
+      <span class="task-text ${task.priority}">${task.text}</span>
+      
+      <button onclick="deleteTask(${task.id})">
+        <i class="fas fa-trash"></i>
+      </button>
+    </li>
+  `;
   });
 
   catContainer.appendChild(taskList);

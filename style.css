@@ -62,6 +62,31 @@ body {
   margin-bottom: 20px;
 }
 
+/* Specific colors for task text based on priority */
+.task-text.high {
+  color: #ff4d4d;
+  font-weight: 500; /* Optional: make high priority slightly bolder */
+}
+
+.task-text.medium {
+  color: #ffa500; /* A slightly darker orange for better readability on white */
+}
+
+.task-text.low {
+  color: #3399ff;
+}
+
+.task-text.none {
+  color: #333; /* Standard dark grey/black */
+}
+
+/* Ensure the strike-through still looks okay */
+.taskItem.completed .task-text {
+  text-decoration: line-through;
+  color: #aaa !important; /* Force a light grey when finished */
+  opacity: 0.6;
+}
+
 .task-form input {
   flex: 1;
   padding: 10px;
