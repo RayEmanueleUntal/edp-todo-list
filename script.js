@@ -1,4 +1,4 @@
-const tasks = [];
+let tasks = [];
 
 // ========Fetching Data from Local Storage========
 document.addEventListener("DOMContentLoaded", () => {
@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 const priorityBtn = document.getElementById("priorityBtn");
 const priorityModal = document.getElementById("priorityModal");
 const closeModalBtn = document.getElementById("closeModalBtn");
+const priorityForm = document.getElementById("priorityForm");
 
 priorityBtn.addEventListener("click", (e) => {
   e.preventDefault();
@@ -83,16 +84,11 @@ taskForm.addEventListener("submit", function (e) {
   // Add task to tasks
   tasks.push(task);
 
-  // Save to Local Storage
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-
-  // Clear Tasks Container
-  document.getElementById("tasksContainer").innerHTML = "";
-
-  // Render
-  loadTasks(tasks);
+  // Save and Render
+  saveAndRender();
 
   // Reset Forms
+  addTaskBtn.disabled = true;
   taskForm.reset();
   document.getElementById("priorityForm").reset();
 });
@@ -198,6 +194,7 @@ function renderTasks(categories) {
   }
 }
 
+// Returns a Container for the Task List
 function createListContainer(cat, tasks) {
   labels = {
     overdue: "Overdue",
@@ -220,12 +217,52 @@ function createListContainer(cat, tasks) {
   const taskList = document.createElement("ol");
   taskList.className = "taskList";
   taskList.id = `taskList_${cat}`;
+
   tasks.forEach((task) => {
-    const listItem = document.createElement("li");
-    listItem.textContent = task.text;
-    taskList.appendChild(listItem);
+    const htmlCode = `
+        <li>
+            <div>
+                <input class="taskCheckbox" type="checkbox" 
+                       id="checkbox_${task.id}" 
+                       ${task.completed ? "checked" : ""} 
+                       onclick="toggleTaskCompletion(${task.id})">
+                
+                <label class="taskLabel" for="checkbox_${task.id}">${task.text}</label>
+                
+                <button class="taskDelBtn" onclick="deleteTask(${task.id})">Delete</button>
+            </div>
+        </li>
+    `;
+
+    taskList.insertAdjacentHTML("beforeend", htmlCode);
   });
+
   catContainer.appendChild(taskList);
 
   return catContainer;
+}
+
+//=========Task Operations=========
+// Deletes Task
+function deleteTask(taskId) {
+  console.log("deleting ", taskId);
+  tasks = tasks.filter((t) => t.id !== taskId);
+  saveAndRender();
+}
+
+// Toggles Completion of Task
+function toggleTaskCompletion(taskId) {
+  console.log("updating completion of ", taskId);
+  const task = tasks.find((t) => t.id === taskId);
+  if (task) {
+    task.completed = !task.completed;
+    saveAndRender();
+  }
+}
+
+// ==========Helper Function/s========
+function saveAndRender() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  document.getElementById("tasksContainer").innerHTML = "";
+  loadTasks(tasks);
 }
