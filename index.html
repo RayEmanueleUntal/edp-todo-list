@@ -4,78 +4,84 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>To-Do List</title>
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
     <link rel="stylesheet" href="style.css" />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
   </head>
-  <body>
-    <div class="container">
-      <form id="taskForm" style="background-color: green">
-        <input type="text" id="taskName" name="taskName" />
-        <input type="date" id="dot" name="dot" />
-        <button id="priorityBtn">
-          <i class="fas fa-flag"></i>
-        </button>
-        <button id="addTaskBtn" type="submit" disabled>+</button>
-      </form>
 
-      <div id="tasksContainer"></div>
+  <body>
+    <div class="app-wrapper">
+      <div class="container glass">
+        <h2 class="app-title">My Tasks</h2>
+
+        <form id="taskForm" class="task-form">
+          <input
+            type="text"
+            id="taskName"
+            name="taskName"
+            placeholder="Add a task..."
+          />
+
+          <div class="date-wrapper">
+            <input type="date" id="dot" name="dot" />
+            <i class="fas fa-calendar"></i>
+          </div>
+
+          <button id="priorityBtn" class="icon-btn" type="button">
+            <i class="fas fa-flag"></i>
+          </button>
+
+          <button id="addTaskBtn" type="submit" disabled class="add-btn">
+            <i class="fas fa-plus"></i>
+          </button>
+        </form>
+
+        <div id="tasksContainer"></div>
+      </div>
     </div>
 
     <!-- For Priority Modals -->
     <dialog id="priorityModal">
-      <button id="closeModalBtn" aria-label="close" class="close-btn">
+      <button
+        type="button"
+        id="closeModalBtn"
+        class="close-btn"
+        aria-label="Close"
+      >
         <i class="fas fa-times"></i>
       </button>
-      <h3>Priority</h3>
       <form id="priorityForm" method="dialog">
         <div class="priority-options">
           <label>
-            <input
-              class="priorityRadio"
-              type="radio"
-              name="priority"
-              value="high"
-              onclick="closeModal()"
-            />
-            <i class="fas fa-flag" style="color: #ff4d4d"></i>
+            <input type="radio" name="priority" value="high" />
+            <i class="fas fa-flag high"></i>
           </label>
           <label>
-            <input
-              class="priorityRadio"
-              type="radio"
-              name="priority"
-              value="medium"
-              onclick="closeModal()"
-            />
-            <i class="fas fa-flag" style="color: #ffcc00"></i>
+            <input type="radio" name="priority" value="medium" />
+            <i class="fas fa-flag medium"></i>
           </label>
           <label>
-            <input
-              class="priorityRadio"
-              type="radio"
-              name="priority"
-              value="low"
-              onclick="closeModal()"
-            />
-            <i class="fas fa-flag" style="color: #3399ff"></i>
+            <input type="radio" name="priority" value="low" />
+            <i class="fas fa-flag low"></i>
           </label>
           <label>
-            <input
-              class="priorityRadio"
-              type="radio"
-              name="priority"
-              value="none"
-              onclick="closeModal()"
-              checked
-            />
-            <i class="fas fa-flag" style="color: #cccccc"></i>
+            <input type="radio" name="priority" value="none" checked />
+            <i class="fas fa-flag none"></i>
           </label>
         </div>
       </form>
     </dialog>
+
     <script src="script.js"></script>
   </body>
 </html>
