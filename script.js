@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const storedTasks = JSON.parse(storedTasksString);
     tasks.push(...storedTasks);
     console.log(tasks);
+    loadTasks(tasks);
   } else {
     console.log("No tasks found in local storage");
   }
@@ -45,7 +46,6 @@ priorityForm.addEventListener("change", () => {
 // =========Add Task Form Submit===========
 const taskName = document.getElementById("taskName");
 const dot = document.getElementById("dot");
-const selectedRadio = document.querySelector('input[name="priority"]:checked');
 const addTaskBtn = document.getElementById("addTaskBtn");
 
 // Activate button only when taskName is filled
@@ -66,6 +66,9 @@ taskForm.addEventListener("submit", function (e) {
   const dateValue = dot.value;
 
   // 3. Priority Input
+  const selectedRadio = document.querySelector(
+    'input[name="priority"]:checked',
+  );
   const priorityValue = selectedRadio ? selectedRadio.value : "none";
 
   // 4. Task Object
@@ -77,12 +80,14 @@ taskForm.addEventListener("submit", function (e) {
     completed: false,
   };
 
-  console.log(task);
   // Add task to tasks
   tasks.push(task);
 
   // Save to Local Storage
   localStorage.setItem("tasks", JSON.stringify(tasks));
+
+  // Clear Tasks Container
+  document.getElementById("tasksContainer").innerHTML = "";
 
   // Render
   loadTasks(tasks);
@@ -93,14 +98,18 @@ taskForm.addEventListener("submit", function (e) {
 });
 
 // =========Rendering Task===========
+
+// Loading, Categorizing, and Sorting Tasks
 function loadTasks(tasks) {
   const now = new Date();
+  now.setHours(0, 0, 0, 0);
 
   const categories = {
     overdue: [],
     today: [],
     next7days: [],
     later: [],
+    noDate: [],
     completed: [],
   };
 
@@ -110,11 +119,19 @@ function loadTasks(tasks) {
       return;
     }
 
+    if (!task.dueDate) {
+      categories.noDate.push(task);
+      return;
+    }
+
     const due = new Date(task.dueDate);
-    const diffDays = (due - now) / (1000 * 60 * 60 * 24);
+    due.setHours(0, 0, 0, 0);
+
+    const diffTime = due - now;
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);
 
     if (diffDays < 0) categories.overdue.push(task);
-    else if (diffDays < 1) categories.today.push(task);
+    else if (diffDays === 0) categories.today.push(task);
     else if (diffDays < 7) categories.next7days.push(task);
     else categories.later.push(task);
   });
@@ -128,8 +145,87 @@ function loadTasks(tasks) {
         if (dateDiff !== 0) return dateDiff;
       }
       // then by priority: high, medium, low, none
-      const priortiyOrder = { high: 1, medium: 2, low: 3, none: 4 };
-      return priortiyOrder[a.priority] - priortiyOrder[b.priority];
+      const priorityOrder = { high: 1, medium: 2, low: 3, none: 4 };
+      const rankA = priorityOrder[a.priority] || 4;
+      const rankB = priorityOrder[b.priority] || 4;
+      return rankA - rankB;
     });
   });
+
+  renderTasks(categories);
+}
+
+// Render Tasks into Task List
+function renderTasks(categories) {
+  const tasksContainer = document.getElementById("tasksContainer");
+
+  // Load Overdue
+  if (categories.overdue.length) {
+    tasksContainer.appendChild(
+      createListContainer("overdue", categories.overdue),
+    );
+  }
+
+  // Load Today
+  if (categories.today.length) {
+    tasksContainer.appendChild(createListContainer("today", categories.today));
+  }
+
+  // Load Next 7 Days
+  if (categories.next7days.length) {
+    tasksContainer.appendChild(
+      createListContainer("next7days", categories.next7days),
+    );
+  }
+
+  // Load Later
+  if (categories.later.length) {
+    tasksContainer.appendChild(createListContainer("later", categories.later));
+  }
+
+  // Load No Date
+  if (categories.noDate.length) {
+    tasksContainer.appendChild(
+      createListContainer("noDate", categories.noDate),
+    );
+  }
+
+  // Load Completed
+  if (categories.completed.length) {
+    tasksContainer.appendChild(
+      createListContainer("completed", categories.completed),
+    );
+  }
+}
+
+function createListContainer(cat, tasks) {
+  labels = {
+    overdue: "Overdue",
+    today: "Today",
+    next7days: "Next 7 Days",
+    later: "Later",
+    noDate: "No Date",
+    completed: "Completed",
+  };
+
+  const catContainer = document.createElement("div");
+  catContainer.className = "catContainer";
+  catContainer.id = `catContainer_${cat}`;
+
+  const catLabel = document.createElement("h3");
+  catLabel.className = "catLabel";
+  catLabel.textContent = labels[cat];
+  catContainer.appendChild(catLabel);
+
+  const taskList = document.createElement("ol");
+  taskList.className = "taskList";
+  taskList.id = `taskList_${cat}`;
+  tasks.forEach((task) => {
+    const listItem = document.createElement("li");
+    listItem.textContent = task.text;
+    taskList.appendChild(listItem);
+  });
+  catContainer.appendChild(taskList);
+
+  return catContainer;
 }
