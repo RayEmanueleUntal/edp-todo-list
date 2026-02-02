@@ -133,10 +133,19 @@ function loadTasks(tasks) {
     else categories.later.push(task);
   });
 
+  // Sort Each Category
   Object.keys(categories).forEach((cat) => {
     categories[cat].sort((a, b) => {
+      if (cat === "overdue" || cat === "next7days" || cat === "later") {
+        // first by date
+        const dateDiff = new Date(a.dueDate) - new Date(b.dueDate);
+        if (dateDiff !== 0) return dateDiff;
+      }
+      // then by priority: high, medium, low, none
       const priorityOrder = { high: 1, medium: 2, low: 3, none: 4 };
-      return priorityOrder[a.priority] - priorityOrder[b.priority];
+      const rankA = priorityOrder[a.priority] || 4;
+      const rankB = priorityOrder[b.priority] || 4;
+      return rankA - rankB;
     });
   });
 
